@@ -469,6 +469,20 @@ scheduler(void)
   }
 }
 
+int
+countactiveprocs(void)
+{
+  struct proc *p;
+  int n = 0;
+  for(p = proc; p < &proc[NPROC]; p++){
+    acquire(&p->lock);
+    if(p->state != UNUSED)
+      n++;
+    release(&p->lock);
+  }
+  return n;
+}
+
 // Switch to scheduler.  Must hold only p->lock
 // and have changed proc->state. Saves and restores
 // intena because intena is a property of this
